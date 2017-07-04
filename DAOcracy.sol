@@ -101,9 +101,9 @@ contract DAOcracy {
     */
     function buy () payable returns (bool success) {
         // Checkings
-        if (msg.value < bondValue || msg.value / bondValue > bonds) throw;
+        if (msg.value < bondValue || msg.value / bondValue > bonds) throw; // Important note : we don't care about floats here for now...
         // Operations
-        bearersBalances[msg.sender] += msg.value / bondValue;
+        bearersBalances[msg.sender] += msg.value / bondValue; // Important note : we don't care about floats here for now...
         return true;
     }
     /**
