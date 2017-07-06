@@ -21,7 +21,9 @@ contract DAOcracy {
     uint public birthdate;
     /// Initial number of bonds.
     uint public initialSupply;
-    /// Actual number of bonds.
+
+    uint public availableSupply;
+
     uint public bonds;
     /// Initial value of bonds.
     uint public initialValue;
@@ -77,10 +79,8 @@ contract DAOcracy {
         birthdate = now;
         market = _market; // account 6.
         // Bonds numbers and values initializations.
-        initialSupply   = _initialSupply;
-        bonds           = _initialSupply;
-        initialValue    = _initialValue;
-        bondValue       = _initialValue;
+        initialSupply   = bonds = _initialSupply;
+        initialValue    = bondValue = _initialValue;
         // Array of DAOists.
         DAOists = _DAOists;
         // Initialization of DAOists Welfares. We don't know what would be the incentive(s) for votes yet.
@@ -101,8 +101,10 @@ contract DAOcracy {
     */
     function buy () payable returns (bool success) {
         // Checkings
-        if (msg.value < bondValue || msg.value / bondValue > bonds) throw; // Important note : we don't care about floats here for now...
+        if (availableSupply < msg.value || msg.value < bondValue || msg.value / bondValue > bonds) throw; // Important note : we don't care about floats here for now...
         // Operations
+        
+        availableSupply -=  msg.value;
         bearersBalances[msg.sender] += msg.value / bondValue; // Important note : we don't care about floats here for now...
         return true;
     }
